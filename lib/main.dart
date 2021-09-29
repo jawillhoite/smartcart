@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'My Shopping List'),
     );
   }
 }
@@ -49,14 +49,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool isChecked1 = false;
+  bool isChecked2 = false;
+  bool isChecked3 = false;
+  List<int> nums = [];
 
-  void _incrementCounter() {
+  void _addItem() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
+      nums.add(_counter);
       _counter++;
     });
   }
@@ -94,20 +99,43 @@ class _MyHomePageState extends State<MyHomePage> {
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            CheckboxListTile(
+              value: isChecked1,
+              onChanged: (value) {
+                setState(() {
+                  isChecked1 = value!;
+                });
+              },
+              title: const Text('Potatoes'),
+              controlAffinity: ListTileControlAffinity.leading,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            CheckboxListTile(
+              value: isChecked2,
+              onChanged: (value) {
+                setState(() {
+                  isChecked2 = value!;
+                });
+              },
+              title: const Text('Lettuce'),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              value: isChecked3,
+              onChanged: (value) {
+                setState(() {
+                  isChecked3 = value!;
+                });
+              },
+              title: const Text('Toothpaste'),
+              controlAffinity: ListTileControlAffinity.leading,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _addItem,
+        tooltip: 'New Item',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
