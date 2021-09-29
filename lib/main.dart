@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+void main()
+{
+   runApp(const MyApp());
 }
-
+/// This is the main application widget.
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'SmartCart',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// This is the stateful widget that the main application instantiates.
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -42,123 +43,78 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
+  
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+/// This is the private State class that goes with MyHomePage.
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  bool isChecked1 = false;
-  bool isChecked2 = false;
-  bool isChecked3 = false;
-  List<int> nums = [];
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Scan Item',
+      style: optionStyle,
+    ),
+    Text(
+      'My Profile',
+      style: optionStyle,
+    ),
+    Text(
+      'Settings',
+      style: optionStyle,
+    ),
+  ];
 
-  void _addItem() {
+  void _onItemTapped(int index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      nums.add(_counter);
-      _counter++;
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('SmartCard'),
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+            backgroundColor: Colors.green,
+            
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_a_photo_outlined),
             label: 'Scan',
+            backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined),
             label: 'Profile',
+            backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
+            backgroundColor: Colors.green,
           ),
-        ]
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        onTap: _onItemTapped,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CheckboxListTile(
-              value: isChecked1,
-              onChanged: (value) {
-                setState(() {
-                  isChecked1 = value!;
-                });
-              },
-              title: const Text('Potatoes'),
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
-            CheckboxListTile(
-              value: isChecked2,
-              onChanged: (value) {
-                setState(() {
-                  isChecked2 = value!;
-                });
-              },
-              title: const Text('Lettuce'),
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
-            CheckboxListTile(
-              value: isChecked3,
-              onChanged: (value) {
-                setState(() {
-                  isChecked3 = value!;
-                });
-              },
-              title: const Text('Toothpaste'),
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addItem,
-        tooltip: 'New Item',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
