@@ -51,6 +51,11 @@ class MyHomePage extends StatefulWidget {
 /// This is the private State class that goes with MyHomePage.
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  int _counter = 0;
+  bool isChecked1 = false;
+  bool isChecked2 = false;
+  bool isChecked3 = false;
+  List<int> nums = [];
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -78,6 +83,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _addItem() {
+    setState(() {
+      nums.add(_counter);
+      _counter++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,8 +97,62 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('SmartCard'),
       ),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _widgetOptions.elementAt(_selectedIndex),
+            CheckboxListTile(
+              value: isChecked1,
+              onChanged: (value) {
+                setState(() {
+                  isChecked1 = value!;
+                });
+              },
+              title: const Text('Potatoes'),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              value: isChecked2,
+              onChanged: (value) {
+                setState(() {
+                  isChecked2 = value!;
+                });
+              },
+              title: const Text('Lettuce'),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              value: isChecked3,
+              onChanged: (value) {
+                setState(() {
+                  isChecked3 = value!;
+                });
+              },
+              title: const Text('Toothpaste'),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+          ],
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addItem,
+        tooltip: 'New Item',
+        child: const Icon(Icons.add),
+      ), 
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
