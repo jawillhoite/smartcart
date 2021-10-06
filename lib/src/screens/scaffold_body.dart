@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../routing.dart';
+import '../screens/home.dart';
+import '../screens/scan.dart';
+import '../screens/profile.dart';
 import '../screens/settings.dart';
 import '../widgets/fade_transition_page.dart';
 //import 'authors.dart';
@@ -25,34 +28,37 @@ class ShoppingListScaffoldBody extends StatelessWidget {
       key: navigatorKey,
       onPopPage: (route, dynamic result) => route.didPop(result),
       pages: [
-        if (currentRoute.pathTemplate.startsWith('/settings'))
+        if (currentRoute.pathTemplate.startsWith('/home'))
+          const FadeTransitionPage<void>(
+            key: ValueKey('home'),
+            child: HomeScreen(),
+          )
+        else if (currentRoute.pathTemplate.startsWith('/scan'))
+          const FadeTransitionPage<void>(
+            key: ValueKey('scan'),
+            child: ScanScreen(),
+          )
+        else if (currentRoute.pathTemplate.startsWith('/profile'))
+          const FadeTransitionPage<void>(
+            key: ValueKey('profile'),
+            child: ProfileScreen(),
+          )
+        else if (currentRoute.pathTemplate.startsWith('/settings'))
           const FadeTransitionPage<void>(
             key: ValueKey('settings'),
             child: SettingsScreen(),
           )
-        //else if (currentRoute.pathTemplate.startsWith('/settings'))
-        //  const FadeTransitionPage<void>(
-        //    key: ValueKey('settings'),
-        //    child: SettingsScreen(),
-        //  )
-        //else if (currentRoute.pathTemplate.startsWith('/books') ||
-        //    currentRoute.pathTemplate == '/')
-        //  const FadeTransitionPage<void>(
-        //    key: ValueKey('books'),
-        //    child: BooksScreen(),
-        //  )
-//
         // Avoid building a Navigator with an empty `pages` list when the
         // RouteState is set to an unexpected path, such as /signin.
         //
         // Since RouteStateScope is an InheritedNotifier, any change to the
         // route will result in a call to this build method, even though this
         // widget isn't built when those routes are active.
-        //else
-        //  FadeTransitionPage<void>(
-        //    key: const ValueKey('empty'),
-        //    child: Container(),
-        //  ),
+        else
+          FadeTransitionPage<void>(
+            key: const ValueKey('empty'),
+            child: Container(),
+          ),
       ],
     );
   }

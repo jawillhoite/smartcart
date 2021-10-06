@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
+//import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../auth.dart';
-import '../data.dart';
+//import '../data.dart';
 //import '../data/library.dart';
 import '../routing.dart';
 import '../screens/sign_in.dart';
@@ -35,7 +35,7 @@ class _ShoppingListNavigatorState extends State<ShoppingListNavigator> {
   Widget build(BuildContext context) {
     final routeState = RouteStateScope.of(context);
     final authState = ShoppingListAuthScope.of(context);
-    final pathTemplate = routeState.route.pathTemplate;
+    //final pathTemplate = routeState.route.pathTemplate;
 
     //Book? selectedBook;
     //if (pathTemplate == '/book/:bookId') {
