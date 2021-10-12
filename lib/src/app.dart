@@ -25,6 +25,7 @@ class _ShoppingListState extends State<ShoppingList> {
       allowedPaths: [
         '/signin',
         '/home',
+        '/lists',
         '/scan',
         '/profile',
         '/settings',

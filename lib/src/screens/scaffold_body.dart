@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../routing.dart';
 import '../screens/home.dart';
+import '../screens/lists.dart';
 import '../screens/scan.dart';
 import '../screens/profile.dart';
 import '../screens/settings.dart';
@@ -32,6 +33,11 @@ class ShoppingListScaffoldBody extends StatelessWidget {
           const FadeTransitionPage<void>(
             key: ValueKey('home'),
             child: HomeScreen(),
+          )
+        else if (currentRoute.pathTemplate.startsWith('/lists'))
+          const FadeTransitionPage<void>(
+            key: ValueKey('lists'),
+            child: ListsScreen(),
           )
         else if (currentRoute.pathTemplate.startsWith('/scan'))
           const FadeTransitionPage<void>(
