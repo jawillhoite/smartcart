@@ -1,6 +1,4 @@
-//import 'package:adaptive_navigation/adaptive_navigation.dart';
 import 'package:flutter/material.dart';
-//import 'package:smartcart/src/screens/navigator.dart';
 
 import '../routing.dart';
 import 'scaffold_body.dart';
