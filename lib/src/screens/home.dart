@@ -32,11 +32,11 @@ class HomeContent extends StatelessWidget {
       mainAxisSpacing: 7,
       padding: const EdgeInsets.all(15),
       children: List.generate(10, (index) {
-        return const FractionallySizedBox(
+        return FractionallySizedBox(
           heightFactor: 1,
             child: Card(
               child: Center (
-                child: Text("Testing"),
+                child: Text("Item $index"),
               ),
             ),
         );
