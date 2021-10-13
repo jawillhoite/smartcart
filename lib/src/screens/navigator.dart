@@ -76,7 +76,7 @@ class _ShoppingListNavigatorState extends State<ShoppingListNavigator> {
                 var signedIn = await authState.signIn(
                     credentials.username, credentials.password);
                 if (signedIn) {
-                  routeState.go('/settings');
+                  routeState.go('/home');
                 }
               },
             ),

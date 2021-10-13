@@ -15,7 +15,7 @@ class ShoppingListScaffold extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SmartCart'),
+        title: const Center(child: Text('SmartCart')),
       ),
 
       body: const ShoppingListScaffoldBody(),
