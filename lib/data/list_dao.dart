@@ -7,7 +7,8 @@ class ListDao {
       FirebaseDatabase.instance.reference().child('lists');
 
   void saveShoppingList(UserShoppingList shoppingList) async {
-    _listsRef.push().set(shoppingList.toJson()); //throws error bc it cant find plugin function set(), idk why its dumb
+    _listsRef.push().set(shoppingList
+        .toJson()); //throws error bc it cant find plugin function set(), idk why its dumb
   }
 
   Query getShoppingListQuery() {
