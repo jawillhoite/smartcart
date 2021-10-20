@@ -31,7 +31,7 @@ class ShoppingListScaffoldBody extends StatelessWidget {
             child: HomeScreen(),
           )
         else if (currentRoute.pathTemplate.startsWith('/lists'))
-          const FadeTransitionPage<void>(
+          FadeTransitionPage<void>(
             key: ValueKey('lists'),
             child: ListsScreen(),
           )
