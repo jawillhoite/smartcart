@@ -123,8 +123,25 @@ class _SecondScreenState extends State<SecondScreen> {
                 return FractionallySizedBox(
                   heightFactor: 1,
                     child: Card(
-                      child: Center (
-                        child: Text(shoppinglist.listOfItems[index]),
+                      child: Column(
+                        children: <Widget>[
+                          ButtonBar(
+                            alignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              MaterialButton(
+                                height: 0.1,
+                                minWidth: 0.1,
+                                child: Icon(Icons.close, color:Colors.red, size: 10.0),
+                                onPressed: () {
+                                  removeItemFromList(shoppinglist.listOfItems[index]);
+                                },
+                              ),
+                            ],
+                          ),
+                          Center (
+                            child: Text(shoppinglist.listOfItems[index]),
+                          ),
+                        ],
                       ),
                     ),
                 );
@@ -150,5 +167,11 @@ class _SecondScreenState extends State<SecondScreen> {
         //TODO: Save new item to database
       }
     }
+  }
+
+  void removeItemFromList(text) {
+    setState(() {
+      widget.shoppingList.listOfItems.remove(text);
+    });
   }
 }
