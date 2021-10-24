@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import 'package:smartcart/data/list_dao.dart';
-import 'package:smartcart/data/shopping_list.dart';
+import 'package:smartcart/src/data/list_dao.dart';
+import 'package:smartcart/src/data/shopping_list.dart';
 import 'package:smartcart/src/app.dart';
 
 class ListsScreen extends StatefulWidget {
@@ -88,6 +88,13 @@ class _SecondScreenState extends State<SecondScreen> {
     final UserShoppingList shoppinglist = widget.shoppingList;
     return Scaffold(
         appBar: AppBar(title: Text(shoppinglist.name)),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.orange,
+        ),
         body: Column(children: <Widget>[
           Padding(
             padding: EdgeInsets.all(20),
@@ -106,21 +113,27 @@ class _SecondScreenState extends State<SecondScreen> {
             },
           ),
           Expanded(
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: shoppinglist.listOfItems.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.teal[100],
-                        border: Border.all(color: Colors.black, width: 1),
+            child: GridView.count(
+              crossAxisCount: 3,
+              childAspectRatio: .75,
+              crossAxisSpacing: 7,
+              mainAxisSpacing: 7,
+              padding: const EdgeInsets.all(15),
+              children: List.generate(shoppinglist.listOfItems.length, (index) {
+                return FractionallySizedBox(
+                  heightFactor: 1,
+                    child: Card(
+                      child: Center (
+                        child: Text(shoppinglist.listOfItems[index]),
                       ),
-                      child:
-                          Center(child: Text(shoppinglist.listOfItems[index])),
-                    );
-                  }))
-        ]));
+                    ),
+                );
+              }),
+            ),
+          )
+        ]
+      )
+    );
   }
 
   void addItemToList() {
@@ -132,6 +145,7 @@ class _SecondScreenState extends State<SecondScreen> {
       } else {
         setState(() {
           widget.shoppingList.listOfItems.add(nameController.text);
+          nameController.text='';
         });
         //TODO: Save new item to database
       }
