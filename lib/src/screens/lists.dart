@@ -90,28 +90,43 @@ class _SecondScreenState extends State<SecondScreen> {
         appBar: AppBar(title: Text(shoppinglist.name)),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 200,
+                  color: Colors.white60,
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Item Name',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          child: const Text('Add Item'),
+                          onPressed: () {
+                            addItemToList();
+                          },
+                        ),
+                      ],
+                    ) 
+                  )
+                );
+              },
+              );
           },
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           backgroundColor: Colors.orange,
         ),
-        body: Column(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Item Name',
-              ),
-            ),
-          ),
-          ElevatedButton(
-            child: Text('Add Item'),
-            onPressed: () {
-              addItemToList();
-            },
-          ),
+        body: Column(
+          children: <Widget>[
           Expanded(
             child: GridView.count(
               crossAxisCount: 3,
@@ -131,7 +146,7 @@ class _SecondScreenState extends State<SecondScreen> {
                               MaterialButton(
                                 height: 0.1,
                                 minWidth: 0.1,
-                                child: Icon(Icons.close, color:Colors.red, size: 10.0),
+                                child: const Icon(Icons.close, color:Colors.red, size: 10.0),
                                 onPressed: () {
                                   removeItemFromList(shoppinglist.listOfItems[index]);
                                 },
