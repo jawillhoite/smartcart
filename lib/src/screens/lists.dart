@@ -33,8 +33,10 @@ class _ListsScreenState extends State<ListsScreen> {
 
               //TODO: get data from database instead of using testlist
               // Send shopping list from here to display on next page
-              UserShoppingList testlist = UserShoppingList("List $index",
-                  ['item1', "item2", '3', '4', '5'], true, false);
+              UserShoppingList testlist = UserShoppingList("List $index",[], true,false);
+              // = 
+              // UserShoppingList("List $index",
+              //     ['item1', "item2", '3', '4', '5', '7', 'Jack'], true, false);
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -64,7 +66,8 @@ class _ListsScreenState extends State<ListsScreen> {
           builder: (context) => SecondScreen(
             shoppingList: listToSend,
           ),
-        ));
+        )
+      );
   }
 }
 
@@ -82,10 +85,17 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   TextEditingController nameController = TextEditingController();
+  
+  // Real-time database connected to list
+  final database = FirebaseDatabase.instance.reference();
 
   @override
   Widget build(BuildContext context) {
     final UserShoppingList shoppinglist = widget.shoppingList;
+    
+    final dailyUpdatedb = database.child('cart');
+
+
     return Scaffold(
         appBar: AppBar(title: Text(shoppinglist.name)),
         body: Column(children: <Widget>[
@@ -100,10 +110,12 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
           ),
           ElevatedButton(
-            child: Text('Add Item'),
+            //child: Text('Add Item'),
             onPressed: () {
-              addItemToList();
+              addItemToList(dailyUpdatedb);
+              
             },
+            child: Text('Add Item'), 
           ),
           Expanded(
               child: ListView.builder(
@@ -123,18 +135,22 @@ class _SecondScreenState extends State<SecondScreen> {
         ]));
   }
 
-  void addItemToList() {
+  void addItemToList(dailyUpdatedb) {
     //dont add if empty string or already in list
     if (nameController.text != '') {
       if (widget.shoppingList.listOfItems
           .any((listElement) => listElement.contains(nameController.text))) {
         return;
-      } else {
+      } 
+      else {
         setState(() {
           widget.shoppingList.listOfItems.add(nameController.text);
         });
         //TODO: Save new item to database
+        dailyUpdatedb.set({'list': nameController});
+        
       }
+
     }
   }
 }
