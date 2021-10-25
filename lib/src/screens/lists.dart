@@ -17,35 +17,38 @@ class ListsScreen extends StatefulWidget {
 class _ListsScreenState extends State<ListsScreen> {
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: .75,
-      crossAxisSpacing: 7,
-      mainAxisSpacing: 7,
-      padding: const EdgeInsets.all(15),
-      children: List.generate(10, (index) {
-        return Card(
-          child: InkWell(
-            child: Center(child: Text("List $index")),
-            onTap: () {
-              print("TAPPY TAP ON #$index");
-              // _saveShoppingList(); // a test, This throws error
+    return Scaffold(
+      appBar: AppBar(title: const Center(child: Text('My Lists'))),
+      body: GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: .75,
+        crossAxisSpacing: 7,
+        mainAxisSpacing: 7,
+        padding: const EdgeInsets.all(15),
+        children: List.generate(10, (index) {
+          return Card(
+            child: InkWell(
+              child: Center(child: Text("List $index")),
+              onTap: () {
+                print("TAPPY TAP ON #$index");
+                // _saveShoppingList(); // a test, This throws error
 
-              //TODO: get data from database instead of using testlist
-              // Send shopping list from here to display on next page
-              UserShoppingList testlist = UserShoppingList("List $index",
-                  ['item1', "item2", '3', '4', '5'], true, false);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SecondScreen(
-                      shoppingList: testlist,
-                    ),
-                  ));
-            },
-          ),
-        );
-      }),
+                //TODO: get data from database instead of using testlist
+                // Send shopping list from here to display on next page
+                UserShoppingList testlist = UserShoppingList("List $index",
+                    ['item1', "item2", '3', '4', '5'], true, false);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SecondScreen(
+                        shoppingList: testlist,
+                      ),
+                    ));
+              },
+            ),
+          );
+        }),
+      ),
     );
   }
 
