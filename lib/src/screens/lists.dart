@@ -93,8 +93,7 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     final UserShoppingList shoppinglist = widget.shoppingList;
 
-    // writing to the child of the tree of the database
-    final cartList = database.child('cartList/October'); 
+
     return Scaffold(
         appBar: AppBar(title: Text(shoppinglist.name)),
         floatingActionButton: FloatingActionButton(
@@ -177,7 +176,11 @@ class _SecondScreenState extends State<SecondScreen> {
     );
   }
 
-  void addItemToList() {
+  void addItemToList() async {
+
+    // writing to the child of the tree of the database
+    //final cartList = database.child(); 
+    
     //dont add if empty string or already in list
     if (nameController.text != '') {
       if (widget.shoppingList.listOfItems
@@ -189,6 +192,8 @@ class _SecondScreenState extends State<SecondScreen> {
           nameController.text='';
         });
         //TODO: Save new item to database
+        //cartList.push{(widget.shoppingList.name)}.set({});
+        await database.child('cartList/October/Username').set(widget.shoppingList.toJson());
       }
     }
   }
