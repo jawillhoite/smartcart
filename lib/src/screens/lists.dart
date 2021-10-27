@@ -94,7 +94,7 @@ class _SecondScreenState extends State<SecondScreen> {
     final UserShoppingList shoppinglist = widget.shoppingList;
 
     // writing to the child of the tree of the database
-    final cartList = database.child('cartList/'); 
+    final cartList = database.child('cartList/October'); 
     return Scaffold(
         appBar: AppBar(title: Text(shoppinglist.name)),
         floatingActionButton: FloatingActionButton(
