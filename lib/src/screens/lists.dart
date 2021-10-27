@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import 'package:smartcart/data/list_dao.dart';
-import 'package:smartcart/data/shopping_list.dart';
+import 'package:smartcart/src/data/list_dao.dart';
+import 'package:smartcart/src/data/shopping_list.dart';
 import 'package:smartcart/src/app.dart';
 
 class ListsScreen extends StatefulWidget {
@@ -17,37 +17,38 @@ class ListsScreen extends StatefulWidget {
 class _ListsScreenState extends State<ListsScreen> {
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: .75,
-      crossAxisSpacing: 7,
-      mainAxisSpacing: 7,
-      padding: const EdgeInsets.all(15),
-      children: List.generate(10, (index) {
-        return Card(
-          child: InkWell(
-            child: Center(child: Text("List $index")),
-            onTap: () {
-              print("TAPPY TAP ON #$index");
-              // _saveShoppingList(); // a test, This throws error
+    return Scaffold(
+      appBar: AppBar(title: const Center(child: Text('My Lists'))),
+      body: GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: .75,
+        crossAxisSpacing: 7,
+        mainAxisSpacing: 7,
+        padding: const EdgeInsets.all(15),
+        children: List.generate(10, (index) {
+          return Card(
+            child: InkWell(
+              child: Center(child: Text("List $index")),
+              onTap: () {
+                print("TAPPY TAP ON #$index");
+                // _saveShoppingList(); // a test, This throws error
 
-              //TODO: get data from database instead of using testlist
-              // Send shopping list from here to display on next page
-              UserShoppingList testlist = UserShoppingList("List $index",[], true,false);
-              // = 
-              // UserShoppingList("List $index",
-              //     ['item1', "item2", '3', '4', '5', '7', 'Jack'], true, false);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SecondScreen(
-                      shoppingList: testlist,
-                    ),
-                  ));
-            },
-          ),
-        );
-      }),
+                //TODO: get data from database instead of using testlist
+                // Send shopping list from here to display on next page
+                UserShoppingList testlist = UserShoppingList("List $index",
+                    ['item1', "item2", '3', '4', '5'], true, false);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SecondScreen(
+                        shoppingList: testlist,
+                      ),
+                    ));
+              },
+            ),
+          );
+        }),
+      ),
     );
   }
 
@@ -66,8 +67,7 @@ class _ListsScreenState extends State<ListsScreen> {
           builder: (context) => SecondScreen(
             shoppingList: listToSend,
           ),
-        )
-      );
+        ));
   }
 }
 
@@ -85,72 +85,117 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   TextEditingController nameController = TextEditingController();
-  
-  // Real-time database connected to list
+
+  // Reference to the real-time datbase
   final database = FirebaseDatabase.instance.reference();
 
   @override
   Widget build(BuildContext context) {
     final UserShoppingList shoppinglist = widget.shoppingList;
-    
-    final dailyUpdatedb = database.child('cart');
 
-
+    // writing to the child of the tree of the database
+    final cartList = database.child('cartList/'); 
     return Scaffold(
         appBar: AppBar(title: Text(shoppinglist.name)),
-        body: Column(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Item Name',
-              ),
-            ),
-          ),
-          ElevatedButton(
-            //child: Text('Add Item'),
-            onPressed: () {
-              addItemToList(dailyUpdatedb);
-              
-            },
-            child: Text('Add Item'), 
-          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 200,
+                  color: Colors.white60,
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Item Name',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          child: const Text('Add Item'),
+                          onPressed: () {
+                            addItemToList();
+                          },
+                        ),
+                      ],
+                    ) 
+                  )
+                );
+              },
+              );
+          },
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.orange,
+        ),
+        body: Column(
+          children: <Widget>[
           Expanded(
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: shoppinglist.listOfItems.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.teal[100],
-                        border: Border.all(color: Colors.black, width: 1),
+            child: GridView.count(
+              crossAxisCount: 3,
+              childAspectRatio: .75,
+              crossAxisSpacing: 7,
+              mainAxisSpacing: 7,
+              padding: const EdgeInsets.all(15),
+              children: List.generate(shoppinglist.listOfItems.length, (index) {
+                return FractionallySizedBox(
+                  heightFactor: 1,
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          ButtonBar(
+                            alignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              MaterialButton(
+                                height: 0.1,
+                                minWidth: 0.1,
+                                child: const Icon(Icons.close, color:Colors.red, size: 10.0),
+                                onPressed: () {
+                                  removeItemFromList(shoppinglist.listOfItems[index]);
+                                },
+                              ),
+                            ],
+                          ),
+                          Center (
+                            child: Text(shoppinglist.listOfItems[index]),
+                          ),
+                        ],
                       ),
-                      child:
-                          Center(child: Text(shoppinglist.listOfItems[index])),
-                    );
-                  }))
-        ]));
+                    ),
+                );
+              }),
+            ),
+          )
+        ]
+      )
+    );
   }
 
-  void addItemToList(dailyUpdatedb) {
+  void addItemToList() {
     //dont add if empty string or already in list
     if (nameController.text != '') {
       if (widget.shoppingList.listOfItems
           .any((listElement) => listElement.contains(nameController.text))) {
         return;
-      } 
-      else {
+      } else {
         setState(() {
           widget.shoppingList.listOfItems.add(nameController.text);
+          nameController.text='';
         });
         //TODO: Save new item to database
-        dailyUpdatedb.set({'list': nameController});
-        
       }
-
     }
+  }
+
+  void removeItemFromList(text) {
+    setState(() {
+      widget.shoppingList.listOfItems.remove(text);
+    });
   }
 }

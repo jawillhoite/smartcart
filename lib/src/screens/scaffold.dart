@@ -14,9 +14,6 @@ class ShoppingListScaffold extends StatelessWidget {
     final selectedIndex = _getSelectedIndex(routeState.route.pathTemplate);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('SmartCart')),
-      ),
 
       body: const ShoppingListScaffoldBody(),
 

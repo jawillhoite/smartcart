@@ -25,22 +25,25 @@ class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: .75,
-      crossAxisSpacing: 7,
-      mainAxisSpacing: 7,
-      padding: const EdgeInsets.all(15),
-      children: List.generate(10, (index) {
-        return FractionallySizedBox(
-          heightFactor: 1,
-            child: Card(
-              child: Center (
-                child: Text("Item $index"),
+    return Scaffold(
+      appBar: AppBar(title: Center(child: Text('TEMP HOME LIST')),),
+      body: GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: .75,
+        crossAxisSpacing: 7,
+        mainAxisSpacing: 7,
+        padding: const EdgeInsets.all(15),
+        children: List.generate(10, (index) {
+          return FractionallySizedBox(
+            heightFactor: 1,
+              child: Card(
+                child: Center (
+                  child: Text("Item $index"),
+                ),
               ),
-            ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
