@@ -15,10 +15,52 @@ class ListsScreen extends StatefulWidget {
 }
 
 class _ListsScreenState extends State<ListsScreen> {
+  TextEditingController listNameController = TextEditingController();
+
+  // Reference to the real-time datbase
+  final database = FirebaseDatabase.instance.reference();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Center(child: Text('My Lists'))),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.orange,
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 200,
+                  color: Colors.white60,
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: TextField(
+                            controller: listNameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'List Name',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          child: const Text('Add List'),
+                          onPressed: () {
+                            addList();
+                          },
+                        ),
+                      ],
+                    ) 
+                  )
+                );
+              },
+            );
+          },
+        ),
       body: GridView.count(
         crossAxisCount: 3,
         childAspectRatio: .75,
@@ -52,22 +94,19 @@ class _ListsScreenState extends State<ListsScreen> {
     );
   }
 
-  void _saveShoppingList() {
-    final testShoppingList =
-        UserShoppingList('testList', ['item1', 'item2'], false, true);
-    widget.listDao.saveShoppingList(testShoppingList);
-  }
-
-  // get the text in the TextField and start the Second Screen
-  void _sendDataToSecondScreen(
-      BuildContext context, UserShoppingList listToSend) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SecondScreen(
-            shoppingList: listToSend,
-          ),
-        ));
+  void addList() async {
+    if (listNameController.text != '') {
+      if (widget.shoppingList.listOfItems
+          .any((listElement) => listElement.contains(nameController.text))) {
+        return;
+      } else {
+        setState(() {
+          widget.shoppingList.listOfItems.add(nameController.text);
+          nameController.text='';
+        });
+        await database.child('cartList/October/Username/' + '1').set(widget.shoppingList.toJson());
+      }
+    }
   }
 }
 
@@ -97,6 +136,8 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
         appBar: AppBar(title: Text(shoppinglist.name)),
         floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.orange,
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -128,10 +169,8 @@ class _SecondScreenState extends State<SecondScreen> {
                   )
                 );
               },
-              );
+            );
           },
-          child: const Icon(Icons.add),
-          backgroundColor: Colors.orange,
         ),
         body: Column(
           children: <Widget>[
@@ -191,9 +230,7 @@ class _SecondScreenState extends State<SecondScreen> {
           widget.shoppingList.listOfItems.add(nameController.text);
           nameController.text='';
         });
-        //TODO: Save new item to database
-        //cartList.push{(widget.shoppingList.name)}.set({});
-        await database.child('cartList/October/Username').set(widget.shoppingList.toJson());
+        await database.child('cartList/October/Username/' + '1').set(widget.shoppingList.toJson());
       }
     }
   }
