@@ -13,24 +13,28 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: const Card(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-                    child: ProfileContent(),
-                  ),
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(title: const Center(child: Text('My Profile')),),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: const Card(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                  child: ProfileContent(),
                 ),
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class ProfileContent extends StatelessWidget {
