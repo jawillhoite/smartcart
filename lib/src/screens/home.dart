@@ -10,23 +10,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: SafeArea(
-          child: HomeContent(),
-        ),
-      );
-}
-
-class HomeContent extends StatelessWidget {
-  const HomeContent({
-    Key? key,
-  }) : super(key: key);
-
-  @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('TEMP HOME LIST')),),
+      appBar: AppBar(title: const Center(child: Text('TEMP HOME LIST')),),
       body: GridView.count(
         crossAxisCount: 3,
         childAspectRatio: .75,

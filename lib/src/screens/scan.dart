@@ -70,32 +70,29 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Builder(builder: (BuildContext context) {
-          return Container(
-              alignment: Alignment.center,
-              child: Flex(
-                  direction: Axis.vertical,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                        onPressed: () => scanBarcodeNormal(),
-                        child: Text('Start barcode scan')),
-                    ElevatedButton(
-                        onPressed: () => scanQR(),
-                        child: Text('Start QR scan')),
-                    ElevatedButton(
-                        onPressed: () => startBarcodeScanStream(),
-                        child: Text('Start barcode scan stream')),
-                    Text('Scan result : $_scanBarcode\n',
-                        style: TextStyle(fontSize: 20))
-                  ]
-                )
-            );
-              
-          }    
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Center(child: Text('Scanner')),),
+      body: Container(
+        alignment: Alignment.center,
+        child: Flex(
+          direction: Axis.vertical,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () => scanBarcodeNormal(),
+              child: const Text('Start barcode scan')),
+            ElevatedButton(
+              onPressed: () => scanQR(),
+              child: const Text('Start QR scan')),
+            ElevatedButton(
+              onPressed: () => startBarcodeScanStream(),
+              child: const Text('Start barcode scan stream')),
+            Text('Scan result : $_scanBarcode\n',
+              style: const TextStyle(fontSize: 20))
+          ]
         )
-  );
-              
-    
+      )          
+    );
+  }              
 }
