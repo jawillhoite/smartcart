@@ -20,6 +20,8 @@ class _ListsScreenState extends State<ListsScreen> {
   // Reference to the real-time datbase
   final database = FirebaseDatabase.instance.reference();
 
+  final myLists = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,25 +69,25 @@ class _ListsScreenState extends State<ListsScreen> {
         crossAxisSpacing: 7,
         mainAxisSpacing: 7,
         padding: const EdgeInsets.all(15),
-        children: List.generate(10, (index) {
+        children: List.generate(myLists.length, (index) {
           return Card(
             child: InkWell(
-              child: Center(child: Text("List $index")),
+              child: Center(child: Text(myLists[index])),
               onTap: () {
                 print("TAPPY TAP ON #$index");
                 // _saveShoppingList(); // a test, This throws error
 
                 //TODO: get data from database instead of using testlist
                 // Send shopping list from here to display on next page
-                UserShoppingList testlist = UserShoppingList("List $index",
-                    ['item1', "item2", '3', '4', '5'], true, false);
-                Navigator.push(
+                readList(myLists[index]).then((myList) {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => SecondScreen(
-                        shoppingList: testlist,
+                        shoppingList: myList,
                       ),
                     ));
+                });
               },
             ),
           );
@@ -96,18 +98,31 @@ class _ListsScreenState extends State<ListsScreen> {
 
   void addList() async {
     if (listNameController.text != '') {
-      if (widget.shoppingList.listOfItems
-          .any((listElement) => listElement.contains(nameController.text))) {
+      if (myLists
+          .any((listElement) => listElement.contains(listNameController.text))) {
         return;
       } else {
+        UserShoppingList newList = UserShoppingList(listNameController.text, [], false, false);
         setState(() {
-          widget.shoppingList.listOfItems.add(nameController.text);
-          nameController.text='';
+          myLists.add(listNameController.text);
+          listNameController.text='';
         });
-        await database.child('cartList/October/Username/' + '1').set(widget.shoppingList.toJson());
+        await database.child('cartList/October/Username/' + newList.name).set(newList.toJson());
       }
     }
   }
+
+  Future<UserShoppingList> readList(listName) async {
+    DataSnapshot test = await (database.child('cartList/October/Username/' + listName).once());
+    List itemList = [];
+    try {
+      itemList = test.value['listOfItems'];
+    } catch (e) {
+      itemList = [];
+    }
+    return UserShoppingList(listName, itemList ,test.value['favorite'], test.value['current']);
+  }
+
 }
 
 class SecondScreen extends StatefulWidget {
@@ -230,14 +245,15 @@ class _SecondScreenState extends State<SecondScreen> {
           widget.shoppingList.listOfItems.add(nameController.text);
           nameController.text='';
         });
-        await database.child('cartList/October/Username/' + '1').set(widget.shoppingList.toJson());
+        await database.child('cartList/October/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
       }
     }
   }
 
-  void removeItemFromList(text) {
+  void removeItemFromList(text) async {
     setState(() {
       widget.shoppingList.listOfItems.remove(text);
     });
+    await database.child('cartList/October/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
   }
 }
