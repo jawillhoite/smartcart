@@ -129,7 +129,7 @@ class _ListsScreenState extends State<ListsScreen> {
           myLists.add(listNameController.text);
           listNameController.text='';
         });
-        await database.child('cartList/October/Username/' + newList.name).set(newList.toJson());
+        await database.child('cartList/Username/' + newList.name).set(newList.toJson());
       }
     }
   }
@@ -138,11 +138,11 @@ class _ListsScreenState extends State<ListsScreen> {
     setState(() {
       myLists.remove(text);
     });
-    await database.child('cartList/October/Username/' + text).remove();
+    await database.child('cartList/Username/' + text).remove();
   }
 
   Future<UserShoppingList> readList(listName) async {
-    DataSnapshot test = await (database.child('cartList/October/Username/' + listName).once());
+    DataSnapshot test = await (database.child('cartList/Username/' + listName).once());
     List itemList = [];
     try {
       itemList = test.value['listOfItems'];
@@ -274,7 +274,7 @@ class _SecondScreenState extends State<SecondScreen> {
           widget.shoppingList.listOfItems.add(nameController.text);
           nameController.text='';
         });
-        await database.child('cartList/October/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
+        await database.child('cartList/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
       }
     }
   }
@@ -283,6 +283,6 @@ class _SecondScreenState extends State<SecondScreen> {
     setState(() {
       widget.shoppingList.listOfItems.remove(text);
     });
-    await database.child('cartList/October/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
+    await database.child('cartList/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
   }
 }
