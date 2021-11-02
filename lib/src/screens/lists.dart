@@ -70,25 +70,47 @@ class _ListsScreenState extends State<ListsScreen> {
         mainAxisSpacing: 7,
         padding: const EdgeInsets.all(15),
         children: List.generate(myLists.length, (index) {
-          return Card(
-            child: InkWell(
-              child: Center(child: Text(myLists[index])),
-              onTap: () {
-                print("TAPPY TAP ON #$index");
-                // _saveShoppingList(); // a test, This throws error
+          return FractionallySizedBox(
+            heightFactor: 1,
+            child: Card(
+              child: InkWell(
+                onTap: () {
+                  print("TAPPY TAP ON #$index");
+                  // _saveShoppingList(); // a test, This throws error
 
-                //TODO: get data from database instead of using testlist
-                // Send shopping list from here to display on next page
-                readList(myLists[index]).then((myList) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SecondScreen(
-                        shoppingList: myList,
-                      ),
-                    ));
-                });
-              },
+                  //TODO: get data from database instead of using testlist
+                  // Send shopping list from here to display on next page
+                  readList(myLists[index]).then((myList) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SecondScreen(
+                          shoppingList: myList,
+                        ),
+                      ));
+                  });
+                },
+                child: Column(
+                  children: <Widget>[
+                    ButtonBar(
+                      alignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        MaterialButton(
+                          height: 0.1,
+                          minWidth: 0.1,
+                          child: const Icon(Icons.close, color:Colors.red, size: 10.0),
+                          onPressed: () {
+                            removeList(myLists[index]);
+                          },
+                        ),
+                      ],
+                    ),
+                    Center (
+                      child: Text(myLists[index]),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         }),
@@ -110,6 +132,13 @@ class _ListsScreenState extends State<ListsScreen> {
         await database.child('cartList/October/Username/' + newList.name).set(newList.toJson());
       }
     }
+  }
+
+  void removeList(text) async {
+    setState(() {
+      myLists.remove(text);
+    });
+    await database.child('cartList/October/Username/' + text).remove();
   }
 
   Future<UserShoppingList> readList(listName) async {
