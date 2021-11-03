@@ -25,6 +25,7 @@ class _ShoppingListState extends State<ShoppingList> {
     _routeParser = TemplateRouteParser(
       allowedPaths: [
         '/signin',
+        '/createAccount',
         '/home',
         '/lists',
         '/scan',
@@ -79,6 +80,12 @@ class _ShoppingListState extends State<ShoppingList> {
   Future<ParsedRoute> _guard(ParsedRoute from) async {
     final signedIn = _auth.signedIn;
     final signInRoute = ParsedRoute('/signin', '/signin', {}, {});
+    
+    //final createAccount = _auth.createAccount;
+
+    //final createAccountRoute = ParsedRoute('/createAccount', '/createAccount', {}, {});
+
+   
 
     // Go to /signin if the user is not signed in
     if (!signedIn && from != signInRoute) {
@@ -94,6 +101,9 @@ class _ShoppingListState extends State<ShoppingList> {
   void _handleAuthStateChanged() {
     if (!_auth.signedIn) {
       _routeState.go('/signin');
+    }
+    else if (!_auth.createAccount){
+      _routeState.go('/createAccount');
     }
   }
 

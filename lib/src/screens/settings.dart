@@ -49,46 +49,16 @@ class SettingsContent extends StatelessWidget {
               'Settings',
               style: Theme.of(context).textTheme.headline4,
             ),
-            ElevatedButton(
-              onPressed: () {
-                ShoppingListAuthScope.of(context).signOut();
-              },
-              child: const Text('Sign out'),
-            ),
             Link(
-              uri: Uri.parse('/book/0'),
+              uri: Uri.parse('/profile'),
               builder: (context, followLink) => TextButton(
                 onPressed: followLink,
-                child: const Text('Go directly to /book/0 (Link)'),
+                child: const Text('View Profile'),
               ),
             ),
-            TextButton(
-              child: const Text('Go directly to /book/0 (RouteState)'),
-              onPressed: () {
-                RouteStateScope.of(context).go('/book/0');
-              },
-            ),
+           
           ].map((w) => Padding(padding: const EdgeInsets.all(8), child: w)),
-          TextButton(
-            onPressed: () => showDialog<String>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Alert!'),
-                content: const Text('The alert description goes here.'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
-            child: const Text('Show Dialog'),
-          )
+          
         ],
       );
 }

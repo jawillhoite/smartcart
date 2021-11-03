@@ -7,6 +7,7 @@ import '../auth.dart';
 import '../routing.dart';
 import '../screens/sign_in.dart';
 import '../widgets/fade_transition_page.dart';
+import '../screens/createAccount.dart';
 //import 'author_details.dart';
 //import 'book_details.dart';
 import 'scaffold.dart';
@@ -27,6 +28,7 @@ class ShoppingListNavigator extends StatefulWidget {
 
 class _ShoppingListNavigatorState extends State<ShoppingListNavigator> {
   final _signInKey = const ValueKey('Sign in');
+  final _createA = const ValueKey('Create Account');
   final _scaffoldKey = const ValueKey<String>('App scaffold');
   final _bookDetailsKey = const ValueKey<String>('Book details screen');
   final _authorDetailsKey = const ValueKey<String>('Author details screen');
@@ -81,6 +83,24 @@ class _ShoppingListNavigatorState extends State<ShoppingListNavigator> {
               },
             ),
           )
+
+
+        // else if (routeState.route.pathTemplate == '/createAccount')
+        //   // Display the sign in screen.
+        //   FadeTransitionPage<void>(
+        //     key: _createA,
+        //     child: createAccountScreen(
+        //       onCreateAccount: (credentials) async {
+        //         var createAccount = await authState.createAcc(
+        //             credentials.username, credentials.password);
+        //         if (createAccount) {
+        //           routeState.go('/home');
+        //         }
+        //       },
+        //     ),
+        //   )
+
+        
         else ...[
           // Display the app
           FadeTransitionPage<void>(

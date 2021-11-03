@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/createAccount.dart';
+
 class Credentials {
   final String username;
   final String password;
@@ -55,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     controller: _passwordController,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(1),
                     child: TextButton(
                       onPressed: () async {
                         widget.onSignIn(
@@ -66,6 +68,22 @@ class _SignInScreenState extends State<SignInScreen> {
                         );
                       },
                       child: const Text('Sign in'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(1),
+                    child: TextButton(
+                      onPressed: () async {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context){
+                            return createAccountScreen(
+
+                            );
+                          }
+                        );
+                      },
+                      child: const Text('Create Account'),
                     ),
                   ),
                 ],

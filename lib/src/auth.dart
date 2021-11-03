@@ -5,7 +5,11 @@ import 'package:flutter/widgets.dart';
 class ShoppingListAuth extends ChangeNotifier {
   bool _signedIn = false;
 
+  bool _createAccount = false;
+
   bool get signedIn => _signedIn;
+
+  bool get createAccount => _createAccount;
 
   Future<void> signOut() async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
@@ -22,6 +26,15 @@ class ShoppingListAuth extends ChangeNotifier {
     notifyListeners();
     return _signedIn;
   }
+
+  // Future<bool> createAcc(String username, String password) async {
+  //   await Future<void>.delayed(const Duration(milliseconds: 200));
+
+  //   // Sign in. Allow any password.
+  //   _createAccount = true;
+  //   notifyListeners();
+  //   return _createAccount;
+  // }
 
   @override
   bool operator ==(Object other) =>
