@@ -23,9 +23,12 @@ class _ListsScreenState extends State<ListsScreen> {
   final database = FirebaseDatabase.instance.reference();
 
   final myLists = [];
+  final myFavoriteLists = [];
+  var allLists = [];
 
   @override
   Widget build(BuildContext context) {
+    var allLists = myFavoriteLists + myLists;
     return Scaffold(
       appBar: AppBar(title: const Center(child: Text('My Lists'))),
       floatingActionButton: FloatingActionButton(
@@ -71,23 +74,18 @@ class _ListsScreenState extends State<ListsScreen> {
         crossAxisSpacing: 7,
         mainAxisSpacing: 7,
         padding: const EdgeInsets.all(15),
-        children: List.generate(myLists.length, (index) {
+        children: List.generate(allLists.length, (index) {
           return FractionallySizedBox(
             heightFactor: 1,
             child: Card(
               child: InkWell(
                 onTap: () {
-                  print("TAPPY TAP ON #$index");
-                  // _saveShoppingList(); // a test, This throws error
-
-                  //TODO: get data from database instead of using testlist
-                  // Send shopping list from here to display on next page
-                  readList(myLists[index]).then((myList) {
+                  readList(allLists[index]).then((allList) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ItemsScreen(
-                          shoppingList: myList,
+                          shoppingList: allList,
                         ),
                       ));
                   });
@@ -95,20 +93,40 @@ class _ListsScreenState extends State<ListsScreen> {
                 child: Column(
                   children: <Widget>[
                     ButtonBar(
-                      alignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        MaterialButton(
-                          height: 0.1,
-                          minWidth: 0.1,
-                          child: const Icon(Icons.close, color:Colors.red, size: 10.0),
-                          onPressed: () {
-                            removeList(myLists[index]);
+                      alignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          child: const Icon(Icons.close, color:Colors.red, size: 10),
+                          onTap: () {
+                            removeList(allLists[index]);
+                          },
+                        ),
+                        InkWell(
+                          child: const Icon(Icons.home_outlined, color:Colors.black, size: 15),
+                          onTap: () {
+                            //
+                          },
+                        ),
+                        InkWell(
+                          child:
+                            (myLists.any((listElement) => listElement.contains(allLists[index]))) ?
+                            const Icon(Icons.star_border_outlined, color:Colors.black, size: 15):
+                            const Icon(Icons.stars, color:Colors.amber, size: 15),
+                          onTap: () {
+                            favoriteList(allLists[index]);
+                            if (myLists.any((listElement) => listElement.contains(allLists[index]))) {
+                              myFavoriteLists.add(allLists[index]);
+                              myLists.remove((allLists[index]));
+                            } else {
+                              myLists.add((allLists[index]));
+                              myFavoriteLists.remove(allLists[index]);
+                            }
                           },
                         ),
                       ],
                     ),
                     Center (
-                      child: Text(myLists[index]),
+                      child: Text(allLists[index]),
                     ),
                   ],
                 ),
@@ -122,8 +140,8 @@ class _ListsScreenState extends State<ListsScreen> {
 
   void addList() async {
     if (listNameController.text != '') {
-      if (myLists
-          .any((listElement) => listElement.contains(listNameController.text))) {
+      if (myLists.any((listElement) => listElement.contains(listNameController.text)) || 
+          myFavoriteLists.any((listElement) => listElement.contains(listNameController.text))) {
         return;
       } else {
         UserShoppingList newList = UserShoppingList(listNameController.text, [], false, false);
@@ -137,10 +155,24 @@ class _ListsScreenState extends State<ListsScreen> {
   }
 
   void removeList(text) async {
+    if (myFavoriteLists
+          .any((listElement) => listElement.contains(listNameController.text))) {
     setState(() {
+      myFavoriteLists.remove(text);
+    });
+    } else {
+      setState(() {
       myLists.remove(text);
     });
+    }
     await database.child('cartList/Username/' + text).remove();
+  }
+
+  void favoriteList(listName) async {
+    UserShoppingList theList = await readList(listName);
+    await database.child('cartList/Username/' + listName + '/favorite').set(!theList.favorite);
+    setState(() {
+    });
   }
 
   Future<UserShoppingList> readList(listName) async {
