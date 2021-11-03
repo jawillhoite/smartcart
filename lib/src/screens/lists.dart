@@ -28,6 +28,8 @@ class _ListsScreenState extends State<ListsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    myFavoriteLists.sort();
+    myLists.sort();
     var allLists = myFavoriteLists + myLists;
     return Scaffold(
       appBar: AppBar(title: const Center(child: Text('My Lists'))),
