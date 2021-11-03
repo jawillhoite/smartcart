@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../routing.dart';
 import '../screens/home.dart';
+import '../screens/item_list.dart';
 import '../screens/lists.dart';
 import '../screens/scan.dart';
 import '../screens/profile.dart';
