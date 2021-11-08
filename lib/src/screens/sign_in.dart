@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'register.dart';
+import 'package:smartcart/src/screens/register.dart';
 //import 'package:smartcart/lib/src/auth.dart';
 
 // class Credentials {
@@ -19,7 +19,7 @@ class SignInScreen extends StatefulWidget {
   //   Key? key,
   // }) : super(key: key);
   final Function toggleView;
-  SignInScreen({this.toggleView});
+  SignInScreen({required this.toggleView});
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -88,13 +88,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   Padding(
                     padding: const EdgeInsets.all(1),
                     child: TextButton(
-                      onPressed: () async {
-                        // showModalBottomSheet(
-                        //     context: context,
-                        //     builder: (BuildContext context) {
-                        //       return createAccountScreen();
-                        //     });
-                      },
+                      onPressed: () => widget.toggleView(), //{
+                      // showModalBottomSheet(
+                      //     context: context,
+                      //     builder: (BuildContext context) {
+                      //       return createAccountScreen();
+                      //     });
+
+                      // },
                       child: const Text('Create Account'),
                     ),
                   ),

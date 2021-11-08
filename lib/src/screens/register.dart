@@ -15,7 +15,7 @@ import '../routing.dart';
 class RegisterScreen extends StatefulWidget {
   // final ValueChanged<Credentials> onRegister;
   final Function toggleView;
-  RegisterScreen({this.toggleView});
+  RegisterScreen({required this.toggleView});
 
   // const RegisterScreen({
   //   required this.onRegister,
@@ -39,6 +39,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(children: [
+        Padding(
+            padding: const EdgeInsets.all(30),
+            child: Image.asset(
+              'assets/images/SmartCart.png',
+              scale: 1.5,
+            )),
         Card(
           child: Container(
             constraints: BoxConstraints.loose(const Size(600, 600)),
@@ -69,6 +75,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       //     _controllerPassword.value.text));
                     },
                     child: const Text('Create Account'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: TextButton(
+                    onPressed: () => widget.toggleView(),
+                    child: const Text('Sign in'),
                   ),
                 ),
               ],

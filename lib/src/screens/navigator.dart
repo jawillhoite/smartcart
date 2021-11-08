@@ -1,9 +1,9 @@
-//import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
-import '../auth.dart';
 import 'sign_in.dart';
 import 'register.dart';
+import '../auth.dart';
+
 //import '../data.dart';
 //import '../data/library.dart';
 import '../routing.dart';
@@ -13,26 +13,28 @@ import '../widgets/fade_transition_page.dart';
 //import 'book_details.dart';
 import 'scaffold.dart';
 
+import 'package:flutter/material.dart';
+
 /// Builds the top-level navigator for the app. The pages to display are based
 /// on the `routeState` that was parsed by the TemplateRouteParser.
 class ShoppingListNavigator extends StatefulWidget {
+  @override
+  _ShoppingListNavigatorState createState() => _ShoppingListNavigatorState();
+
   final GlobalKey<NavigatorState> navigatorKey;
 
   const ShoppingListNavigator({
     required this.navigatorKey,
     Key? key,
   }) : super(key: key);
-
-  @override
-  _ShoppingListNavigatorState createState() => _ShoppingListNavigatorState();
 }
 
 class _ShoppingListNavigatorState extends State<ShoppingListNavigator> {
-  final _signInKey = const ValueKey('Sign in');
-  final _createA = const ValueKey('Create Account');
-  final _scaffoldKey = const ValueKey<String>('App scaffold');
-  final _bookDetailsKey = const ValueKey<String>('Book details screen');
-  final _authorDetailsKey = const ValueKey<String>('Author details screen');
+  // final _signInKey = const ValueKey('Sign in');
+  // final _createA = const ValueKey('Create Account');
+  // final _scaffoldKey = const ValueKey<String>('App scaffold');
+  // final _bookDetailsKey = const ValueKey<String>('Book details screen');
+  // final _authorDetailsKey = const ValueKey<String>('Author details screen');
 
   bool showSignIn = true;
 
