@@ -22,134 +22,189 @@ class _ListsScreenState extends State<ListsScreen> {
   // Reference to the real-time datbase
   final database = FirebaseDatabase.instance.reference();
 
-  var myLists = [];
-  var myFavoriteLists = [];
-  var allLists = [];
+  List myLists = [];
+  List myFavoriteLists = [];
+  List allLists = [];
   @override
   Widget build(BuildContext context) {
-    Future<DataSnapshot> userSnapshot = updateLists();
-    userSnapshot.then((userLists) {
-      Map<dynamic, dynamic> lists=userLists.value;
-      lists.forEach((k,v) {
-        if (v['favorite'] && !myFavoriteLists.contains(k)) {
-          myFavoriteLists.add(k.toString());
-        } else if (!v['favorite'] && !myLists.contains(k)) {
-          myLists.add(k.toString());
-          print(k);
-        }
-      });
-    });
-    //print(myLists);
-    myFavoriteLists.sort();
-    myLists.sort();
-    allLists = myFavoriteLists + myLists;
-    return Scaffold(
-      appBar: AppBar(title: const Center(child: Text('My Lists'))),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          backgroundColor: Colors.orange,
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return Container(
-                  height: 200,
-                  color: Colors.white60,
-                  child: Center(
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: TextField(
-                            controller: listNameController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'List Name',
-                            ),
+    return FutureBuilder(
+      future: updateLists(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if( snapshot.connectionState == ConnectionState.waiting){
+          return Scaffold(
+            appBar: AppBar(title: const Center(child: Text('My Lists'))),
+            );
+        }else{
+          if (snapshot.hasError){
+            return Text("ERROR");
+          }else{
+            try{
+              Map<dynamic, dynamic> lists=snapshot.data.value;
+              lists.forEach((k,v) {
+                if (v['favorite'] && !myFavoriteLists.contains(k)) {
+                  myFavoriteLists.add(k.toString());
+                } else if (!v['favorite'] && !myLists.contains(k)) {
+                  myLists.add(k.toString());
+                  print(myLists);
+                }
+              });
+              myFavoriteLists.sort();
+              myLists.sort();
+              allLists = myFavoriteLists + myLists;
+              return Scaffold(
+                appBar: AppBar(title: const Center(child: Text('My Lists'))),
+                floatingActionButton: FloatingActionButton(
+                    child: const Icon(Icons.add),
+                    backgroundColor: Colors.orange,
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 200,
+                            color: Colors.white60,
+                            child: Center(
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: TextField(
+                                      controller: listNameController,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'List Name',
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    child: const Text('Add List'),
+                                    onPressed: () {
+                                      //print(myLists);
+                                      addList();
+                                    },
+                                  ),
+                                ],
+                              ) 
+                            )
+                          );
+                        },
+                      );
+                    },
+                  ),
+                body: GridView.count(
+                  crossAxisCount: 3,
+                  childAspectRatio: .75,
+                  crossAxisSpacing: 7,
+                  mainAxisSpacing: 7,
+                  padding: const EdgeInsets.all(15),
+                  children: List.generate(allLists.length, (index) {
+                    return FractionallySizedBox(
+                      heightFactor: 1,
+                      child: Card(
+                        child: InkWell(
+                          onTap: () {
+                            readList(allLists[index]).then((allList) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ItemsScreen(
+                                    shoppingList: allList,
+                                  ),
+                                ));
+                            });
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              ButtonBar(
+                                alignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                    child: const Icon(Icons.close, color:Colors.red, size: 10),
+                                    onTap: () {
+                                      removeList(allLists[index]);
+                                    },
+                                  ),
+                                  InkWell(
+                                    child: const Icon(Icons.home_outlined, color:Colors.black, size: 15),
+                                    onTap: () {
+                                      //
+                                    },
+                                  ),
+                                  InkWell(
+                                    child:
+                                      (myLists.any((listElement) => listElement == allLists[index])) ?
+                                      const Icon(Icons.star_border_outlined, color:Colors.black, size: 15):
+                                      const Icon(Icons.stars, color:Colors.amber, size: 15),
+                                    onTap: () {
+                                      favoriteList(allLists[index]);
+                                      if (myLists.any((listElement) => listElement == allLists[index])) {
+                                        myFavoriteLists.add(allLists[index]);
+                                        myLists.remove((allLists[index]));
+                                      } else {
+                                        myLists.add((allLists[index]));
+                                        myFavoriteLists.remove(allLists[index]);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              Center (
+                                child: Text(allLists[index]),
+                              ),
+                            ],
                           ),
                         ),
-                        ElevatedButton(
-                          child: const Text('Add List'),
-                          onPressed: () {
-                            //print(myLists);
-                            addList();
-                          },
-                        ),
-                      ],
-                    ) 
-                  )
-                );
-              },
-            );
-          },
-        ),
-      body: GridView.count(
-        crossAxisCount: 3,
-        childAspectRatio: .75,
-        crossAxisSpacing: 7,
-        mainAxisSpacing: 7,
-        padding: const EdgeInsets.all(15),
-        children: List.generate(allLists.length, (index) {
-          return FractionallySizedBox(
-            heightFactor: 1,
-            child: Card(
-              child: InkWell(
-                onTap: () {
-                  readList(allLists[index]).then((allList) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ItemsScreen(
-                          shoppingList: allList,
-                        ),
-                      ));
-                  });
-                },
-                child: Column(
-                  children: <Widget>[
-                    ButtonBar(
-                      alignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          child: const Icon(Icons.close, color:Colors.red, size: 10),
-                          onTap: () {
-                            removeList(allLists[index]);
-                          },
-                        ),
-                        InkWell(
-                          child: const Icon(Icons.home_outlined, color:Colors.black, size: 15),
-                          onTap: () {
-                            //
-                          },
-                        ),
-                        InkWell(
-                          child:
-                            (myLists.any((listElement) => listElement.contains(allLists[index]))) ?
-                            const Icon(Icons.star_border_outlined, color:Colors.black, size: 15):
-                            const Icon(Icons.stars, color:Colors.amber, size: 15),
-                          onTap: () {
-                            favoriteList(allLists[index]);
-                            if (myLists.any((listElement) => listElement.contains(allLists[index]))) {
-                              myFavoriteLists.add(allLists[index]);
-                              myLists.remove((allLists[index]));
-                            } else {
-                              myLists.add((allLists[index]));
-                              myFavoriteLists.remove(allLists[index]);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Center (
-                      child: Text(allLists[index]),
-                    ),
-                  ],
+                      ),
+                    );
+                  }),
                 ),
-              ),
-            ),
-          );
-        }),
-      ),
+              );
+            } catch (e) {
+              return Scaffold(
+                appBar: AppBar(title: const Center(child: Text('My Lists'))),
+                  floatingActionButton: FloatingActionButton(
+                  child: const Icon(Icons.add),
+                  backgroundColor: Colors.orange,
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 200,
+                          color: Colors.white60,
+                          child: Center(
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: TextField(
+                                    controller: listNameController,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'List Name',
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  child: const Text('Add List'),
+                                  onPressed: () {
+                                    //print(myLists);
+                                    addList();
+                                  },
+                                ),
+                              ],
+                            ) 
+                          )
+                        );
+                      },
+                    );
+                  },
+                ),
+              );
+            }
+          }
+        }
+      }
     );
   }
 
@@ -159,8 +214,8 @@ class _ListsScreenState extends State<ListsScreen> {
 
   void addList() async {
     if (listNameController.text != '') {
-      if (myLists.any((listElement) => listElement.contains(listNameController.text)) || 
-          myFavoriteLists.any((listElement) => listElement.contains(listNameController.text))) {
+      if (myLists.any((listElement) => listElement ==listNameController.text) || 
+          myFavoriteLists.any((listElement) => listElement == listNameController.text)) {
         return;
       } else {
         UserShoppingList newList = UserShoppingList(listNameController.text, [], false, false);
@@ -175,7 +230,7 @@ class _ListsScreenState extends State<ListsScreen> {
 
   void removeList(text) async {
     if (myFavoriteLists
-          .any((listElement) => listElement.contains(listNameController.text))) {
+          .any((listElement) => listElement == text)) {
     setState(() {
       myFavoriteLists.remove(text);
     });
