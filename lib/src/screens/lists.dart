@@ -22,15 +22,27 @@ class _ListsScreenState extends State<ListsScreen> {
   // Reference to the real-time datbase
   final database = FirebaseDatabase.instance.reference();
 
-  final myLists = [];
-  final myFavoriteLists = [];
+  var myLists = [];
+  var myFavoriteLists = [];
   var allLists = [];
-
   @override
   Widget build(BuildContext context) {
+    Future<DataSnapshot> userSnapshot = updateLists();
+    userSnapshot.then((userLists) {
+      Map<dynamic, dynamic> lists=userLists.value;
+      lists.forEach((k,v) {
+        if (v['favorite'] && !myFavoriteLists.contains(k)) {
+          myFavoriteLists.add(k.toString());
+        } else if (!v['favorite'] && !myLists.contains(k)) {
+          myLists.add(k.toString());
+          print(k);
+        }
+      });
+    });
+    //print(myLists);
     myFavoriteLists.sort();
     myLists.sort();
-    var allLists = myFavoriteLists + myLists;
+    allLists = myFavoriteLists + myLists;
     return Scaffold(
       appBar: AppBar(title: const Center(child: Text('My Lists'))),
       floatingActionButton: FloatingActionButton(
@@ -59,6 +71,7 @@ class _ListsScreenState extends State<ListsScreen> {
                         ElevatedButton(
                           child: const Text('Add List'),
                           onPressed: () {
+                            //print(myLists);
                             addList();
                           },
                         ),
@@ -138,6 +151,10 @@ class _ListsScreenState extends State<ListsScreen> {
         }),
       ),
     );
+  }
+
+  Future<DataSnapshot> updateLists() async {
+    return await database.child('cartList/Username/').once();
   }
 
   void addList() async {
