@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:smartcart/src/data/list_dao.dart';
 import 'package:smartcart/src/data/shopping_list.dart';
-import 'package:smartcart/src/app.dart';
 
 import '../screens/item_list.dart';
 
@@ -25,6 +24,7 @@ class _ListsScreenState extends State<ListsScreen> {
   List myLists = [];
   List myFavoriteLists = [];
   List allLists = [];
+  var currentList = "";
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -36,16 +36,19 @@ class _ListsScreenState extends State<ListsScreen> {
             );
         }else{
           if (snapshot.hasError){
-            return Text("ERROR");
+            return const Text("ERROR");
           }else{
             try{
               Map<dynamic, dynamic> lists=snapshot.data.value;
               lists.forEach((k,v) {
-                if (v['favorite'] && !myFavoriteLists.contains(k)) {
-                  myFavoriteLists.add(k.toString());
-                } else if (!v['favorite'] && !myLists.contains(k)) {
-                  myLists.add(k.toString());
-                  print(myLists);
+                if (k != 'current'){
+                  if (v['favorite'] && !myFavoriteLists.contains(k)) {
+                    myFavoriteLists.add(k.toString());
+                  } else if (!v['favorite'] && !myLists.contains(k)) {
+                    myLists.add(k.toString());
+                  }
+                } else {
+                  currentList = v;
                 }
               });
               myFavoriteLists.sort();
@@ -125,9 +128,12 @@ class _ListsScreenState extends State<ListsScreen> {
                                     },
                                   ),
                                   InkWell(
-                                    child: const Icon(Icons.home_outlined, color:Colors.black, size: 15),
+                                    child: 
+                                    (allLists[index] != currentList) ?
+                                    const Icon(Icons.home_outlined, color:Colors.black, size: 15):
+                                    const Icon(Icons.home, color:Colors.blue, size: 15),
                                     onTap: () {
-                                      //
+                                      setCurrentList(allLists[index]);
                                     },
                                   ),
                                   InkWell(
@@ -245,6 +251,18 @@ class _ListsScreenState extends State<ListsScreen> {
   void favoriteList(listName) async {
     UserShoppingList theList = await readList(listName);
     await database.child('cartList/Username/' + listName + '/favorite').set(!theList.favorite);
+    setState(() {
+    });
+  }
+
+  void setCurrentList(current) async {
+    DataSnapshot lists = await (database.child('cartList/Username/').once());
+    lists.value.forEach((k,v) {
+      database.child('cartList/Username/' + k.toString() + '/current').set(false);
+    });
+    await database.child('cartList/Username/' + current + '/current').set(true);
+    await database.child('cartList/Username/current').set(current);
+    currentList = current;
     setState(() {
     });
   }

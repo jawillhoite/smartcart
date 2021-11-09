@@ -25,7 +25,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final UserShoppingList shoppinglist = widget.shoppingList;
+    UserShoppingList shoppinglist = widget.shoppingList;
 
 
     return Scaffold(
@@ -111,29 +111,35 @@ class _ItemsScreenState extends State<ItemsScreen> {
   }
 
   void addItemToList() async {
-
-    // writing to the child of the tree of the database
-    //final cartList = database.child(); 
-    
-    //dont add if empty string or already in list
     if (nameController.text != '') {
       if (widget.shoppingList.listOfItems
-          .any((listElement) => listElement.contains(nameController.text))) {
+          .any((listElement) => listElement == nameController.text)) {
         return;
       } else {
-        setState(() {
-          widget.shoppingList.listOfItems.add(nameController.text);
-          nameController.text='';
+        List added = [];
+        widget.shoppingList.listOfItems.forEach((element) {
+          added.add(element);
         });
-        await database.child('cartList/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
+        added.add(nameController.text);
+        widget.shoppingList.listOfItems = added;
+        await database.child('cartList/Username/' + widget.shoppingList.name + '/listOfItems').set(added);
+        nameController.text='';
+        setState(() {
+        });
       }
     }
   }
 
   void removeItemFromList(text) async {
-    setState(() {
-      widget.shoppingList.listOfItems.remove(text);
+    List removed = [];
+    widget.shoppingList.listOfItems.forEach((element) {
+      if (element != text) {
+        removed.add(element);
+      }
     });
-    await database.child('cartList/Username/' + widget.shoppingList.name).set(widget.shoppingList.toJson());
+    widget.shoppingList.listOfItems = removed;
+    await database.child('cartList/Username/' + widget.shoppingList.name + '/listOfItems').set(removed);
+    setState(() {
+    });
   }
 }

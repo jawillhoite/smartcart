@@ -1,8 +1,8 @@
 class UserShoppingList {
-  final String name;
-  final List listOfItems;
-  final bool favorite;
-  final bool current;
+  String name;
+  List listOfItems;
+  bool favorite;
+  bool current;
 
   UserShoppingList(this.name, this.listOfItems, this.favorite, this.current);
 
