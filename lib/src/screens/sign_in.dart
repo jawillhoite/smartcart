@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/createAccount.dart';
+import '../screens/register.dart';
 
 class Credentials {
   final String username;
@@ -25,6 +25,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +62,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: const EdgeInsets.all(1),
                     child: TextButton(
                       onPressed: () async {
-                        widget.onSignIn(
-                          Credentials(
-                            _usernameController.value.text,
-                            _passwordController.value.text
-                          )
-                        );
+                         if(_usernameController.value.text == '' || _passwordController.value.text != '')
+                         {
+                            error = 'Could not sign in with those credtials';
+                         }
+                         else{
+                          widget.onSignIn(
+                            Credentials(
+                              _usernameController.value.text,
+                              _passwordController.value.text
+                            )
+                          );
+                         }
                       },
                       child: const Text('Sign in'),
                     ),
@@ -78,7 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context){
-                            return createAccountScreen(
+                            return registerScreen(
 
                             );
                           }
