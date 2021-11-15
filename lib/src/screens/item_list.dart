@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smartcart/src/data/list_dao.dart';
 import 'package:smartcart/src/data/shopping_list.dart';
 import 'package:smartcart/src/app.dart';
+import 'package:smartcart/src/widgets/item.dart';
 
 class ItemsScreen extends StatefulWidget {
   final UserShoppingList shoppingList;
@@ -77,30 +78,10 @@ class _ItemsScreenState extends State<ItemsScreen> {
               mainAxisSpacing: 7,
               padding: const EdgeInsets.all(15),
               children: List.generate(shoppinglist.listOfItems.length, (index) {
-                return FractionallySizedBox(
-                  heightFactor: 1,
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          ButtonBar(
-                            alignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              MaterialButton(
-                                height: 0.1,
-                                minWidth: 0.1,
-                                child: const Icon(Icons.close, color:Colors.red, size: 10.0),
-                                onPressed: () {
-                                  removeItemFromList(shoppinglist.listOfItems[index]);
-                                },
-                              ),
-                            ],
-                          ),
-                          Center (
-                            child: Text(shoppinglist.listOfItems[index]),
-                          ),
-                        ],
-                      ),
-                    ),
+                return ItemWidget(
+                  itemName: shoppinglist.listOfItems[index],
+                  myList: shoppinglist,
+                  function: removeItemFromList,
                 );
               }),
             ),

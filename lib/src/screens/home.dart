@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smartcart/src/app.dart';
 
 import 'package:smartcart/src/data/shopping_list.dart';
+import 'package:smartcart/src/widgets/item.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -84,30 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSpacing: 7,
                         padding: const EdgeInsets.all(15),
                         children: List.generate(myShoppingList.listOfItems.length, (index) {
-                          return FractionallySizedBox(
-                            heightFactor: 1,
-                              child: Card(
-                                child: Column(
-                                  children: <Widget>[
-                                    ButtonBar(
-                                      alignment: MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        MaterialButton(
-                                          height: 0.1,
-                                          minWidth: 0.1,
-                                          child: const Icon(Icons.close, color:Colors.red, size: 10.0),
-                                          onPressed: () {
-                                            removeItemFromList(myShoppingList,myShoppingList.listOfItems[index]);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    Center (
-                                      child: Text(myShoppingList.listOfItems[index]),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                          return ItemWidget(
+                            itemName: myShoppingList.listOfItems[index],
+                            myList: myShoppingList,
+                            function: removeItemFromList,
                           );
                         }),
                       ),
