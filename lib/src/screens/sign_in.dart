@@ -62,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: const EdgeInsets.all(1),
                     child: TextButton(
                       onPressed: () async {
-                         if(_usernameController.value.text == '' || _passwordController.value.text != '')
+                         if(_usernameController.value.text == 'admin' || _passwordController.value.text != 'password')
                          {
                             error = 'Could not sign in with those credtials';
                          }

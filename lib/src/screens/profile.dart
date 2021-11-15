@@ -46,6 +46,11 @@ class ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           ...[
+            CircleAvatar(
+              backgroundColor: Colors.green,
+              child: const Text('SC'),
+              radius: 50,
+            ),
             Text(
               'Profile',
               style: Theme.of(context).textTheme.headline4,
@@ -56,6 +61,7 @@ class ProfileContent extends StatelessWidget {
               },
               child: const Text('Sign out'),
             ),
+            
             Text(
               'This is the profile',
               style: const TextStyle(fontSize: 20)
