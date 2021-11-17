@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final database = FirebaseDatabase.instance.reference();
+
   String error = '';
 
   @override
@@ -62,9 +65,30 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: const EdgeInsets.all(1),
                     child: TextButton(
                       onPressed: () async {
-                         if(_usernameController.value.text != 'admin' || _passwordController.value.text != 'password')
+                        var snapShot_UserData = await database.child('cartList').once();
+                        var userList = [];
+                        Map <dynamic,dynamic> usernames = snapShot_UserData.value;
+                        usernames.forEach((key, value) {
+                          userList.add(key);
+                        });
+
+                         if(userList.contains(_usernameController.value.text)  && snapShot_UserData.value[_usernameController.value.text]['password'] != _passwordController.value.text )
                          {
                             error = 'Could not sign in with those credtials';
+                            print(error);
+                         }
+                         else if (!userList.contains(_usernameController.value.text))
+                         {
+                           print('User does not exits');
+                           showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context){
+                            return registerScreen(
+                             
+
+                            );
+                          }
+                        );
                          }
                          else{
                           widget.onSignIn(
@@ -86,6 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           context: context,
                           builder: (BuildContext context){
                             return registerScreen(
+                             
 
                             );
                           }
