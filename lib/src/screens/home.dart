@@ -86,9 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.all(15),
                         children: List.generate(myShoppingList.listOfItems.length, (index) {
                           return ItemWidget(
-                            itemName: myShoppingList.listOfItems[index],
+                            itemName: myShoppingList.listOfItems[index][0],
                             myList: myShoppingList,
                             function: removeItemFromList,
+                            databaseList: 'cartList/Username/' + myShoppingList.name + '/listOfItems',
+                            selected: myShoppingList.listOfItems[index][1],
                           );
                         }),
                       ),
@@ -110,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (data.value != null) {
       return await readList(data.value);
     } else {
-      return UserShoppingList('Pick A Current List (House)', [] ,false, true);
+      return UserShoppingList('Pick A Current List', [] ,false, true);
     }
   }
 
@@ -135,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
         L.listOfItems.forEach((element) {
           added.add(element);
         });
-        added.add(nameController.text);
+        added.add([nameController.text,false]);
         await database.child('cartList/Username/' + L.name + '/listOfItems').set(added);
         nameController.text='';
         setState(() {

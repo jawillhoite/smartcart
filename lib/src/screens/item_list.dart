@@ -79,9 +79,11 @@ class _ItemsScreenState extends State<ItemsScreen> {
               padding: const EdgeInsets.all(15),
               children: List.generate(shoppinglist.listOfItems.length, (index) {
                 return ItemWidget(
-                  itemName: shoppinglist.listOfItems[index],
+                  itemName: shoppinglist.listOfItems[index][0],
                   myList: shoppinglist,
                   function: removeItemFromList,
+                  databaseList: 'cartList/Username/' + widget.shoppingList.name + '/listOfItems',
+                  selected: shoppinglist.listOfItems[index][1],
                 );
               }),
             ),
