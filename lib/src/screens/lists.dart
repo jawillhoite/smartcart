@@ -5,6 +5,7 @@ import 'package:smartcart/src/data/list_dao.dart';
 import 'package:smartcart/src/data/shopping_list.dart';
 
 import '../screens/item_list.dart';
+import '../data/user.dart' as globals;
 
 class ListsScreen extends StatefulWidget {
   ListsScreen({Key? key}) : super(key: key);
@@ -41,14 +42,15 @@ class _ListsScreenState extends State<ListsScreen> {
             try{
               Map<dynamic, dynamic> lists=snapshot.data.value;
               lists.forEach((k,v) {
-                if (k != 'current'){
+                if (k != 'current' && k != 'password'){
                   if (v['favorite'] && !myFavoriteLists.contains(k)) {
                     myFavoriteLists.add(k.toString());
                   } else if (!v['favorite'] && !myLists.contains(k)) {
                     myLists.add(k.toString());
                   }
                 } else {
-                  currentList = v;
+                  if (k == 'current'){
+                  currentList = v;}
                 }
               });
               myFavoriteLists.sort();
@@ -215,7 +217,7 @@ class _ListsScreenState extends State<ListsScreen> {
   }
 
   Future<DataSnapshot> updateLists() async {
-    return await database.child('cartList/Username/').once();
+    return await database.child('cartList/' + globals.currUser).once();
   }
 
   void addList() async {
@@ -229,7 +231,7 @@ class _ListsScreenState extends State<ListsScreen> {
           myLists.add(listNameController.text);
           listNameController.text='';
         });
-        await database.child('cartList/Username/' + newList.name).set(newList.toJson());
+        await database.child('cartList/' + globals.currUser + '/' + newList.name).set(newList.toJson());
       }
     }
   }
@@ -245,30 +247,31 @@ class _ListsScreenState extends State<ListsScreen> {
       myLists.remove(text);
     });
     }
-    await database.child('cartList/Username/' + text).remove();
+    await database.child('cartList/' + globals.currUser + '/' + text).remove();
   }
 
   void favoriteList(listName) async {
     UserShoppingList theList = await readList(listName);
-    await database.child('cartList/Username/' + listName + '/favorite').set(!theList.favorite);
+    await database.child('cartList/' + globals.currUser + '/' + listName + '/favorite').set(!theList.favorite);
     setState(() {
     });
   }
 
   void setCurrentList(current) async {
-    DataSnapshot lists = await (database.child('cartList/Username/').once());
+    DataSnapshot lists = await (database.child('cartList/' + globals.currUser + '/').once());
     lists.value.forEach((k,v) {
-      database.child('cartList/Username/' + k.toString() + '/current').set(false);
+      if (k != 'password'){
+      database.child('cartList/' + globals.currUser + '/' + k.toString() + '/current').set(false);}
     });
-    await database.child('cartList/Username/' + current + '/current').set(true);
-    await database.child('cartList/Username/current').set(current);
+    await database.child('cartList/' + globals.currUser + '/' + current + '/current').set(true);
+    await database.child('cartList/' + globals.currUser + '/current').set(current);
     currentList = current;
     setState(() {
     });
   }
 
   Future<UserShoppingList> readList(listName) async {
-    DataSnapshot test = await (database.child('cartList/Username/' + listName).once());
+    DataSnapshot test = await (database.child('cartList/' + globals.currUser + '/' + listName).once());
     List itemList = [];
     try {
       itemList = test.value['listOfItems'];

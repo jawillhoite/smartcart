@@ -5,6 +5,7 @@ import 'package:smartcart/src/data/list_dao.dart';
 import 'package:smartcart/src/data/shopping_list.dart';
 import 'package:smartcart/src/app.dart';
 import 'package:smartcart/src/widgets/item.dart';
+import '../data/user.dart' as globals;
 
 class ItemsScreen extends StatefulWidget {
   final UserShoppingList shoppingList;
@@ -82,7 +83,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                   itemName: shoppinglist.listOfItems[index][0],
                   myList: shoppinglist,
                   function: removeItemFromList,
-                  databaseList: 'cartList/Username/' + widget.shoppingList.name + '/listOfItems',
+                  databaseList: 'cartList/' + globals.currUser + '/' + widget.shoppingList.name + '/listOfItems',
                   selected: shoppinglist.listOfItems[index][1],
                 );
               }),
@@ -105,7 +106,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
         });
         added.add(nameController.text);
         widget.shoppingList.listOfItems = added;
-        await database.child('cartList/Username/' + widget.shoppingList.name + '/listOfItems').set(added);
+        await database.child('cartList/' + globals.currUser + '/' + widget.shoppingList.name + '/listOfItems').set(added);
         nameController.text='';
         setState(() {
         });
@@ -121,7 +122,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
       }
     });
     widget.shoppingList.listOfItems = removed;
-    await database.child('cartList/Username/' + widget.shoppingList.name + '/listOfItems').set(removed);
+    await database.child('cartList/' + globals.currUser + '/' + widget.shoppingList.name + '/listOfItems').set(removed);
     setState(() {
     });
   }

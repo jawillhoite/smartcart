@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/register.dart';
+import '../data/user.dart' as globals;
 
 class Credentials {
   final String username;
@@ -67,10 +68,14 @@ class _SignInScreenState extends State<SignInScreen> {
                       onPressed: () async {
                         var snapShot_UserData = await database.child('cartList').once();
                         var userList = [];
+                        try{
                         Map <dynamic,dynamic> usernames = snapShot_UserData.value;
                         usernames.forEach((key, value) {
                           userList.add(key);
                         });
+                        }catch (e) {
+                          print('no user');
+                        };
 
                          if(userList.contains(_usernameController.value.text)  && snapShot_UserData.value[_usernameController.value.text]['password'] != _passwordController.value.text )
                          {
@@ -91,6 +96,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         );
                          }
                          else{
+                          globals.currUser = _usernameController.value.text;
                           widget.onSignIn(
                             Credentials(
                               _usernameController.value.text,

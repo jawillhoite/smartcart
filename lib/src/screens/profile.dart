@@ -3,6 +3,7 @@ import 'package:url_launcher/link.dart';
 
 import '../auth.dart';
 import '../routing.dart';
+import '../data/user.dart' as globals;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -52,7 +53,7 @@ class ProfileContent extends StatelessWidget {
               radius: 50,
             ),
             Text(
-              'Profile',
+              globals.currUser,
               style: Theme.of(context).textTheme.headline4,
             ),
             ElevatedButton(

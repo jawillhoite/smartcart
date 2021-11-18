@@ -4,6 +4,7 @@ import 'package:smartcart/src/app.dart';
 
 import 'package:smartcart/src/data/shopping_list.dart';
 import 'package:smartcart/src/widgets/item.dart';
+import '../data/user.dart' as globals;
 
 
 class HomeScreen extends StatefulWidget {
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemName: myShoppingList.listOfItems[index][0],
                             myList: myShoppingList,
                             function: removeItemFromList,
-                            databaseList: 'cartList/Username/' + myShoppingList.name + '/listOfItems',
+                            databaseList: 'cartList/' + globals.currUser + '/' + myShoppingList.name + '/listOfItems',
                             selected: myShoppingList.listOfItems[index][1],
                           );
                         }),
@@ -108,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<UserShoppingList> getCurrent() async {
-    DataSnapshot data = await database.child('cartList/Username/current').once();
+    DataSnapshot data = await database.child('cartList/' + globals.currUser + '/current').once();
     if (data.value != null) {
       return await readList(data.value);
     } else {
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<UserShoppingList> readList(listName) async {
-    DataSnapshot test = await (database.child('cartList/Username/' + listName).once());
+    DataSnapshot test = await (database.child('cartList/' + globals.currUser + '/' + listName).once());
     List itemList = [];
     try {
       itemList = test.value['listOfItems'];
@@ -138,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
           added.add(element);
         });
         added.add([nameController.text,false]);
-        await database.child('cartList/Username/' + L.name + '/listOfItems').set(added);
+        await database.child('cartList/' + globals.currUser + '/' + L.name + '/listOfItems').set(added);
         nameController.text='';
         setState(() {
         });
@@ -153,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
         removed.add(element);
       }
     });
-    await database.child('cartList/Username/' + L.name + '/listOfItems').set(removed);
+    await database.child('cartList/' + globals.currUser + '/' + L.name + '/listOfItems').set(removed);
     setState(() {
     });
   }

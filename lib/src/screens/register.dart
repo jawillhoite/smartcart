@@ -61,10 +61,14 @@ class _registerScreenState extends State<registerScreen> {
                       onPressed: () async {
                         var snapShot_UserData = await database.child('cartList').once();
                         var userList = [];
+                        try{
                         Map <dynamic,dynamic> usernames = snapShot_UserData.value;
                         usernames.forEach((key, value) {
                           userList.add(key);
                         });
+                        } catch (e) {
+                          print('no users');
+                        }
 
 
 
@@ -96,6 +100,10 @@ class _registerScreenState extends State<registerScreen> {
                           print(_controllerPassword.value.text);
                           print('Success');
                           database.child('cartList/'+_controllerUsername.value.text+'/password').set(_controllerPassword.value.text);
+                          // database.child('cartList/'+_controllerUsername.value.text+'/current').set(false);
+                          // database.child('cartList/'+_controllerUsername.value.text+'/favorite').set(true);
+                          _controllerUsername.text = '';
+                          _controllerPassword.text = '';
                         
                         }
                         
