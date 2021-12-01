@@ -5,6 +5,7 @@ import '../auth.dart';
 import '../routing.dart';
 import '../data/user.dart' as globals;
 
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -15,38 +16,14 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: const Center(child: Text('My Profile')),),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: const Card(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-                  child: ProfileContent(),
-                ),
-              ),
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: const Center(child: Text('My Profile')),
       ),
-    );
-  }
-}
-
-class ProfileContent extends StatelessWidget {
-  const ProfileContent({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          ...[
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
             CircleAvatar(
               backgroundColor: Colors.green,
               child: Text(
@@ -59,18 +36,49 @@ class ProfileContent extends StatelessWidget {
               globals.currUser,
               style: Theme.of(context).textTheme.headline4,
             ),
+            Text('This is the profile', style: const TextStyle(fontSize: 20)),
             ElevatedButton(
               onPressed: () {
+                alignment: Alignment.bottomCenter;
                 ShoppingListAuthScope.of(context).signOut();
               },
               child: const Text('Sign out'),
             ),
-            
-            Text(
-              'This is the profile',
-              style: const TextStyle(fontSize: 20)
-            ),
-          ].map((w) => Padding(padding: const EdgeInsets.all(8), child: w)),
-        ],
-      );
+
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.edit),
+        backgroundColor: Colors.orange,
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                color: Colors.white60,
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Edit Profile',
+                          ),
+                        ),
+                      ),
+                      
+                    ],
+                  ) 
+                )
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 }
