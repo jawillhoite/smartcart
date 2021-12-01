@@ -49,7 +49,10 @@ class ProfileContent extends StatelessWidget {
           ...[
             CircleAvatar(
               backgroundColor: Colors.green,
-              child: const Text('SC'),
+              child: Text(
+                globals.currUser[0].toUpperCase(),
+                style: TextStyle(color: Colors.black, fontSize: 30.0),
+              ),
               radius: 50,
             ),
             Text(
