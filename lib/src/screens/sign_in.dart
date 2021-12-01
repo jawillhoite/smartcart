@@ -74,17 +74,19 @@ class _SignInScreenState extends State<SignInScreen> {
                           userList.add(key);
                         });
                         }catch (e) {
+                          setState(() => error='No user');
                           print('no user');
                         };
 
                          if(userList.contains(_usernameController.value.text)  && snapShot_UserData.value[_usernameController.value.text]['password'] != _passwordController.value.text )
                          {
-                            error = 'Could not sign in with those credtials';
-                            print(error);
+                            setState(() => error = 'Could not sign in with those credtials');
+                            //print(error);
                          }
                          else if (!userList.contains(_usernameController.value.text))
                          {
-                           print('User does not exits');
+                           setState(() => error = 'User does not exist');
+                           //print('User does not exist');
                            showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context){
@@ -125,6 +127,10 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: const Text('Create Account'),
                     ),
                   ),
+                  Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14.0),
+                    ),
                 ],
               ),
             ),
