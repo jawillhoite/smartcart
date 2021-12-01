@@ -97,14 +97,14 @@ class _ItemsScreenState extends State<ItemsScreen> {
   void addItemToList() async {
     if (nameController.text != '') {
       if (widget.shoppingList.listOfItems
-          .any((listElement) => listElement == nameController.text)) {
+          .any((listElement) => listElement[0] == nameController.text)) {
         return;
       } else {
         List added = [];
         widget.shoppingList.listOfItems.forEach((element) {
           added.add(element);
         });
-        added.add(nameController.text);
+        added.add([nameController.text,false]);
         widget.shoppingList.listOfItems = added;
         await database.child('cartList/' + globals.currUser + '/' + widget.shoppingList.name + '/listOfItems').set(added);
         nameController.text='';
