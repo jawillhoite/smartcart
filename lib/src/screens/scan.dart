@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' ;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,30 +9,41 @@ import 'package:url_launcher/link.dart';
 import '../data/user.dart' as globals;
 
 
+class HttpService {  
+  static String postURL = 'http://www.brocade.io/api/items/'; 
+
+  Future<List<API>> getPost(barcodeScanRes) async {
+
+    final response = await get(Uri.parse(postURL + barcodeScanRes));
+
+  if (response.statusCode == 200)
+  {
+    List<dynamic> body = jsonDecode(response.body);
+    List<API> posts = body.map((dynamic item) => API.fromJson(item)).toList();
+
+    return posts;
+
+  }
+  else {
+    throw "Can't get posts.";
+  }
+  }  
+}
+
 // GET API Model
 class API {
-  static String postURL = 'http://www.brocade.io/api/items/';
-
-  final int barcode;
-  final String brandName;
   final String name;
 
   API({
-    required this.barcode,
-    required this.brandName,
     required this.name    
     });
 
     factory API.fromJson(Map<String, dynamic> json) {
       return API(
-        barcode: json['gtin14'],
-        brandName: json['brand_name'].toString(),
-        name: json['name'].toString()
+        name: json['name'] as String,
       );
     }
 }
-
-
 
 
 class ScanScreen extends StatefulWidget {
@@ -80,6 +91,7 @@ class _ScanScreenState extends State<ScanScreen> {
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
+    
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
@@ -87,7 +99,9 @@ class _ScanScreenState extends State<ScanScreen> {
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-
+    HttpService callAPI = HttpService();
+    var res = callAPI.getPost(barcodeScanRes);
+    print(res);
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -111,9 +125,7 @@ class _ScanScreenState extends State<ScanScreen> {
             ElevatedButton(
               onPressed: () => scanBarcodeNormal(),
               child: const Text('Start barcode scan')),
-            ElevatedButton(
-              onPressed: () => scanQR(),
-              child: const Text('Start QR scan')),
+            
             ElevatedButton(
               onPressed: () => startBarcodeScanStream(),
               child: const Text('Start barcode scan stream')),
