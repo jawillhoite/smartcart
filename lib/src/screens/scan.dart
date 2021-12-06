@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'package:http/http.dart' ;
 
@@ -9,26 +10,24 @@ import 'package:url_launcher/link.dart';
 import '../data/user.dart' as globals;
 
 
-class HttpService {  
-  static String postURL = 'http://www.brocade.io/api/items/'; 
+Future<String> getPost(barcodeScanRes) async {
 
-  Future<List<API>> getPost(barcodeScanRes) async {
-
-    final response = await get(Uri.parse(postURL + barcodeScanRes));
+  final response = await get(Uri.parse('http://www.brocade.io/api/items/' + barcodeScanRes));
 
   if (response.statusCode == 200)
   {
-    List<dynamic> body = jsonDecode(response.body);
-    List<API> posts = body.map((dynamic item) => API.fromJson(item)).toList();
+    var body = jsonDecode(response.body);
+    print(body);
+    //List<API> posts = body.map((dynamic item) => API.fromJson(item)).toList();
 
-    return posts;
+    return body['name'];
 
   }
   else {
     throw "Can't get posts.";
   }
-  }  
-}
+}  
+
 
 // GET API Model
 class API {
@@ -54,6 +53,7 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen> {
   String _scanBarcode = 'Unknown';
+  String _scanName = 'Unknown';
 
   @override
   void initState() {
@@ -99,9 +99,7 @@ class _ScanScreenState extends State<ScanScreen> {
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-    HttpService callAPI = HttpService();
-    var res = callAPI.getPost(barcodeScanRes);
-    print(res);
+    var res = await getPost(barcodeScanRes);
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -109,6 +107,8 @@ class _ScanScreenState extends State<ScanScreen> {
 
     setState(() {
       _scanBarcode = barcodeScanRes;
+      print(res);
+      _scanName = res;
     });
   }
 
@@ -129,7 +129,9 @@ class _ScanScreenState extends State<ScanScreen> {
             ElevatedButton(
               onPressed: () => startBarcodeScanStream(),
               child: const Text('Start barcode scan stream')),
-            Text('Scan result : $_scanBarcode\n',
+            Text('Scan id : $_scanBarcode\n',
+              style: const TextStyle(fontSize: 20)),
+            Text('Scan name : $_scanName\n',
               style: const TextStyle(fontSize: 20)),
            
           ]
