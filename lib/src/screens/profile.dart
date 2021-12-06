@@ -24,14 +24,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         alignment: Alignment.center,
         child: Column(
           children: [
-            CircleAvatar(
+            Padding(
+            padding: const EdgeInsets.all(30),            
+              child: CircleAvatar(
               backgroundColor: Colors.green,
               child: Text(
                 globals.currUser[0].toUpperCase(),
                 style: TextStyle(color: Colors.black, fontSize: 30.0),
               ),
               radius: 50,
-            ),
+            ),            
+          ),            
             Text(
               globals.currUser,
               style: Theme.of(context).textTheme.headline4,
@@ -44,41 +47,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               child: const Text('Sign out'),
             ),
-
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.edit),
-        backgroundColor: Colors.orange,
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                height: 200,
-                color: Colors.white60,
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Edit Profile',
-                          ),
-                        ),
-                      ),
-                      
-                    ],
-                  ) 
-                )
-              );
-            },
-          );
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.edit),
+      //   backgroundColor: Colors.orange,
+      //   onPressed: () {
+      //     showModalBottomSheet(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return Container(
+      //           height: 200,
+      //           color: Colors.white60,
+      //           child: Center(
+      //             child: Column(
+      //               children: <Widget>[
+      //                 Padding(
+      //                   padding: const EdgeInsets.all(20),
+      //                   child: TextField(
+      //                     decoration: const InputDecoration(
+      //                       border: OutlineInputBorder(),
+      //                       labelText: 'Edit Profile',
+      //                     ),
+      //                   ),
+      //                 ),                      
+      //               ],
+      //             ) 
+      //           )
+      //         );
+      //       },
+      //     );
+      //   },
+      // ),
     );
   }
 }

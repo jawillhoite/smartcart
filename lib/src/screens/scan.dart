@@ -1,8 +1,37 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:url_launcher/link.dart';
+import '../data/user.dart' as globals;
+
+
+// GET API Model
+class API {
+  static String postURL = 'http://www.brocade.io/api/items/';
+
+  final int barcode;
+  final String brandName;
+  final String name;
+
+  API({
+    required this.barcode,
+    required this.brandName,
+    required this.name    
+    });
+
+    factory API.fromJson(Map<String, dynamic> json) {
+      return API(
+        barcode: json['gtin14'],
+        brandName: json['brand_name'].toString(),
+        name: json['name'].toString()
+      );
+    }
+}
+
 
 
 
@@ -89,7 +118,8 @@ class _ScanScreenState extends State<ScanScreen> {
               onPressed: () => startBarcodeScanStream(),
               child: const Text('Start barcode scan stream')),
             Text('Scan result : $_scanBarcode\n',
-              style: const TextStyle(fontSize: 20))
+              style: const TextStyle(fontSize: 20)),
+           
           ]
         )
       )          
