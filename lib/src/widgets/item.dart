@@ -48,7 +48,9 @@ class _ItemWidgetState extends State<ItemWidget> {
               ],
             ),
             Center (
-              child: Text(widget.itemName),
+              child: Padding(padding: const EdgeInsets.all(4),
+                child: Text(widget.itemName),
+              )
             ),
             Expanded(
               child: Align (
