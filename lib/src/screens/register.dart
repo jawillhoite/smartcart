@@ -13,15 +13,10 @@ class RegCredentials {
 }
 
 class registerScreen extends StatefulWidget {
-//  final ValueChanged<RegCredentials> onRegister;
-
-//  const registerScreen({required this.onRegister,Key? key,}) : super(key: key);
 
   @override
   _registerScreenState createState() => _registerScreenState();
 }
-
-
 
 class _registerScreenState extends State<registerScreen> {
   final _controllerUsername = TextEditingController();
@@ -30,7 +25,7 @@ class _registerScreenState extends State<registerScreen> {
 
   String error = '';
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset : false,
@@ -53,8 +48,7 @@ class _registerScreenState extends State<registerScreen> {
                     decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
                     controller: _controllerPassword,
-                  ),
-                  
+                  ),                  
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: TextButton(
@@ -67,32 +61,23 @@ class _registerScreenState extends State<registerScreen> {
                           userList.add(key);
                         });
                         } catch (e) {
-                          print('no users');
+                           setState(() => error = 'no users');
                         }
-
-
-
-                        if(_controllerUsername.value.text == '' /*|| _controllerPassword.value.text != Null*/)
+                        if(_controllerUsername.value.text == '')
                         { 
-                          error = 'No user was create';
-                          // Credentials(
-                          //   _controllerUsername.value.text,
-                          //   _controllerPassword.value.text,
-                          
-                          // );
+                          setState(() => error = 'No user was create');
                         }
                         else if (_controllerPassword.value.text == '')
                         {
-                          error = 'No password was create';
+                          setState(() => error = 'No password was create');
                         }
                         else if (_controllerUsername.value.text == '' || _controllerPassword.value.text =='')
                         {
-                          print('Could not sign in with those credtials');
-                          // error = 'Could not sign in with those credtials';
+                          setState(() => error = 'Could not sign in with those credtials');
                         }
-                        else if(userList.contains(_controllerUsername.value.text)) //If another user name exist
+                        else if(userList.contains(_controllerUsername.value.text)) 
                         {
-                           print('User already exist' );
+                          setState(() => error = 'User already exist');
                         } 
                         else
                         {
@@ -100,17 +85,14 @@ class _registerScreenState extends State<registerScreen> {
                           print(_controllerPassword.value.text);
                           print('Success');
                           database.child('cartList/'+_controllerUsername.value.text+'/password').set(_controllerPassword.value.text);
-                          // database.child('cartList/'+_controllerUsername.value.text+'/current').set(false);
-                          // database.child('cartList/'+_controllerUsername.value.text+'/favorite').set(true);
                           _controllerUsername.text = '';
                           _controllerPassword.text = '';
-                        
                         }
-                        
-
                       },
                       child: const Text('Create Account'),
                     ),
+                  ),
+                  Text(error, style: TextStyle(color: Colors.red, fontSize: 14.0),
                   ),
                 ],
               ),

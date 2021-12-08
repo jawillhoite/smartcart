@@ -75,28 +75,22 @@ class _SignInScreenState extends State<SignInScreen> {
                         });
                         }catch (e) {
                           setState(() => error='No user');
-                          print('no user');
                         };
-
-                         if(userList.contains(_usernameController.value.text)  && snapShot_UserData.value[_usernameController.value.text]['password'] != _passwordController.value.text )
-                         {
-                            setState(() => error = 'Could not sign in with those credtials');
-                            //print(error);
-                         }
-                         else if (!userList.contains(_usernameController.value.text))
-                         {
-                           setState(() => error = 'User does not exist');
-                           //print('User does not exist');
-                           showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context){
-                            return registerScreen(
-                             
-
-                            );
-                          }
-                        );
-                         }
+                        if(userList.contains(_usernameController.value.text)  && snapShot_UserData.value[_usernameController.value.text]['password'] != _passwordController.value.text )
+                        {
+                          setState(() => error = 'Could not sign in with those credtials');
+                        }
+                        else if (!userList.contains(_usernameController.value.text))
+                        {
+                          setState(() => error = 'User does not exist');
+                          showModalBottomSheet(
+                            context: context,
+                              builder: (BuildContext context){
+                                return registerScreen(
+                                );
+                            }
+                          );
+                        }
                          else{
                           globals.currUser = _usernameController.value.text;
                           widget.onSignIn(
@@ -118,8 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           context: context,
                           builder: (BuildContext context){
                             return registerScreen(
-                             
-
+                              
                             );
                           }
                         );

@@ -35,51 +35,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               radius: 50,
             ),            
           ),            
-            Text(
-              globals.currUser,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Text('This is the profile', style: const TextStyle(fontSize: 20)),
-            ElevatedButton(
-              onPressed: () {
-                alignment: Alignment.bottomCenter;
-                ShoppingListAuthScope.of(context).signOut();
-              },
-              child: const Text('Sign out'),
-            ),
+          Text(
+            'This is ' + globals.currUser + ' profile',
+            style: const TextStyle(fontSize: 20),
+          ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Alignment.bottomCenter;
+          //     ShoppingListAuthScope.of(context).signOut();
+          //   },
+          //   child: const Text('Sign out'),
+          // ),
+          OutlinedButton(
+            onPressed: (){ShoppingListAuthScope.of(context).signOut();}, 
+            child: Text('SIGN OUT',
+            style: TextStyle(fontSize: 16, letterSpacing: 2.2, color: Colors.black)),
+          ),
+            
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: const Icon(Icons.edit),
-      //   backgroundColor: Colors.orange,
-      //   onPressed: () {
-      //     showModalBottomSheet(
-      //       context: context,
-      //       builder: (BuildContext context) {
-      //         return Container(
-      //           height: 200,
-      //           color: Colors.white60,
-      //           child: Center(
-      //             child: Column(
-      //               children: <Widget>[
-      //                 Padding(
-      //                   padding: const EdgeInsets.all(20),
-      //                   child: TextField(
-      //                     decoration: const InputDecoration(
-      //                       border: OutlineInputBorder(),
-      //                       labelText: 'Edit Profile',
-      //                     ),
-      //                   ),
-      //                 ),                      
-      //               ],
-      //             ) 
-      //           )
-      //         );
-      //       },
-      //     );
-      //   },
-      // ),
     );
   }
 }
